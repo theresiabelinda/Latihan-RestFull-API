@@ -90,7 +90,6 @@ class ProductTest extends TestCase
 
     public function testUpdateProductSuccess()
     {
-        $this->withoutMiddleware(); // hilangkan auth jika route butuh token
 
         $this->seed(UserSeeder::class);
         $this->seed(ProductSeeder::class);
@@ -113,7 +112,6 @@ class ProductTest extends TestCase
             'name' => 'Indomie Goreng'
         ]);
     }
-
 
     public function testUpdateProductNotFound()
     {
