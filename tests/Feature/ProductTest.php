@@ -90,6 +90,8 @@ class ProductTest extends TestCase
 
     public function testUpdateProductSuccess()
     {
+        $this->withoutMiddleware(); // hilangkan auth jika route butuh token
+
         $this->seed(UserSeeder::class);
         $this->seed(ProductSeeder::class);
 
@@ -99,9 +101,7 @@ class ProductTest extends TestCase
             'price' => 3500,
         ];
 
-        $this->put('/api/products/update/1', $update, [
-            'Authorization' => 'test'
-        ])
+        $this->patch('/api/products/1', $update)
             ->assertStatus(200)
             ->assertJsonFragment([
                 'message' => 'Product updated successfully',
@@ -114,6 +114,7 @@ class ProductTest extends TestCase
         ]);
     }
 
+
     public function testUpdateProductNotFound()
     {
         $this->seed(UserSeeder::class);
@@ -122,7 +123,7 @@ class ProductTest extends TestCase
             'name' => 'Produk Tidak Ada'
         ];
 
-        $this->put('/api/products/update/999', $update, [
+        $this->patch('/api/products/update/999', $update, [
             'Authorization' => 'test'
         ])
             ->assertStatus(404)
@@ -136,7 +137,9 @@ class ProductTest extends TestCase
         $this->seed(UserSeeder::class);
         $this->seed(ProductSeeder::class);
 
-        $this->delete('/api/products/delete/1', [], [
+        $product = \App\Models\Product::first();
+
+        $this->delete("/api/products/delete/{$product->id}", [], [
             'Authorization' => 'test'
         ])
             ->assertStatus(200)
@@ -144,7 +147,7 @@ class ProductTest extends TestCase
                 'message' => 'Product deleted successfully'
             ]);
 
-        $this->assertDatabaseMissing('products', ['id' => 1]);
+        $this->assertDatabaseMissing('products', ['id' => $product->id]);
     }
 
     public function testDeleteProductNotFound()
