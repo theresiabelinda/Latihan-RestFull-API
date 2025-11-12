@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AlbumController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,7 @@ Route::middleware(\App\Http\Middleware\ApiAuthMiddleware::class)->group(function
     Route::post('/products/add', [ProductController::class, 'add']);
     Route::patch('/products/update/{id}', [ProductController::class, 'update']);
     Route::delete('/products/delete/{id}', [ProductController::class, 'delete']);
+
+    Route::post('/albums', [AlbumController::class, 'store']);
+
 });
